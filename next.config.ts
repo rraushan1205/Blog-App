@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: '/Blog-App',
-  assetPrefix: '/Blog-App/',
-  /* add other config options as needed */
+  // basePath: '/',  // Replace with your repository name
+  // assetPrefix: '/',
+  // output: "export",  // New option to replace `next export`
 };
 
 export default nextConfig;
