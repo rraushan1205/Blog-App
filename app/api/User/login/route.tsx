@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { serialize } from "cookie";
 
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET || "vvvjsndkb";
+const JWT_SECRET = "$secret";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -21,26 +21,25 @@ export async function POST(request: NextRequest) {
 
   if (User) {
     if (bcrypt.compareSync(password, User.password)) {
-      const token = jwt.sign({ id: User.id, email: User.email }, JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+      const token = jwt.sign(
+        { id: User.id, name: User.name, email: User.email },
+        JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
+      const cookie = serialize("auth_token", token, {
+        httpOnly: false, // Allows JavaScript to access the cookie
+        secure: false, // Disables the secure flag for development
+        maxAge: 60 * 60, // 1 hour in seconds
+        path: "/", // Makes the cookie available on all routes
       });
-      console.log(JWT_SECRET);
-
-      // Create the cookie with the JWT token
-      const cookie = serialize("authToken", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // use secure flag in production
-        sameSite: "strict",
-        path: "/",
-        maxAge: 24 * 60 * 60, // 1 day
-      });
-      console.log("logged in");
+      console.log(cookie);
       // Redirect to the homepage after successful login
       return NextResponse.redirect("http://localhost:3000/", {
         headers: { "Set-Cookie": cookie },
       });
     }
-    return NextResponse.redirect("http://localhost:3000/login"); // Redirect to login if password is incorrect
   }
 
   return NextResponse.redirect("http://localhost:3000/login"); // Redirect to login if user does not exist

@@ -19,7 +19,6 @@ export default function Auth() {
             <input name="email" className="text-black px-2 outline-none" />
             <label htmlFor="password">Password</label>
             <input name="password" className="text-black px-2 outline-none" />
-
             <div className="flex justify-center py-2">
               <button
                 type="submit"
@@ -32,7 +31,7 @@ export default function Auth() {
           <section className="my-5">
             Already have account?{" "}
             <span className="text-blue-700">
-              <Link href="/Authentication/login">Login</Link>
+              <Link href="/login">Login</Link>
             </span>
           </section>
         </div>

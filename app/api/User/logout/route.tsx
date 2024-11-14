@@ -1,19 +1,11 @@
+"use server";
 import { NextResponse } from "next/server";
-import { serialize } from "cookie";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { Router } from "next/router";
 
 export async function GET() {
-  const cookie = serialize("authToken", "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: "/",
-    maxAge: -1, // Expire the cookie immediately
-  });
-
-  return NextResponse.json(
-    { message: "Logged out successfully" },
-    {
-      headers: { "Set-Cookie": cookie },
-    }
-  );
+  (await cookies()).delete("auth_token");
+  // return NextResponse.redirect("http://localhost:3000/login");
+  return NextResponse.json({ message: "Logged out" });
 }
