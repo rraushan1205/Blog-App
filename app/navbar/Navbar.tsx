@@ -20,7 +20,8 @@ const Navbar = () => {
   const handleLogout = async () => {
     try {
       await fetch("/api/User/logout", { method: "GET" });
-      router.replace("/"); // Redirect to login page after logout
+      setJwtDecoded(null);
+      // router.replace("/"); // Redirect to login page after logout
     } catch (error) {
       console.error("Logout failed:", error);
     }

@@ -10,6 +10,7 @@
     "deploy": "next build && gh-pages -d out"
   },
   "dependencies": {
+    "@nextui-org/skeleton": "^2.0.32",
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "cookie": "^1.0.1",

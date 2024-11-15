@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
   const content = formData.get("content") as string;
   const title = formData.get("title") as string;
   const cookieStore = await cookies();
+  console.log(formData, title, content);
   const authToken = cookieStore.get("auth_token")?.value;
 
   if (!authToken) {
@@ -22,11 +23,13 @@ export async function POST(request: NextRequest) {
     const decodedToken = jwtDecode<CustomJwtPayload>(authToken);
     console.log("Decoded Token:", decodedToken);
     const userId = decodedToken.id;
+
     const User = await prisma.user.findFirst({
       where: {
         id: userId,
       },
     });
+
     if (User) {
       const newPost = await prisma.post.create({
         data: {
@@ -36,11 +39,7 @@ export async function POST(request: NextRequest) {
           author: { connect: { id: User.id } },
         },
       });
-      return NextResponse.json({
-        data: newPost,
-        message: "Successfully created new post",
-        User: User,
-      });
+      return NextResponse.redirect(new URL("/", request.url));
     }
   } catch (error) {
     console.error("Error decoding token:", error);

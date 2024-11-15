@@ -14,21 +14,22 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  password  String
-  posts     Post[]
-  comments  Comment[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         Int       @id @default(autoincrement())
+  name       String
+  email      String    @unique
+  password   String
+  profileImg String    @default("https://media.istockphoto.com/id/1451587807/vector/user-profile-icon-vector-avatar-or-person-icon-profile-picture-portrait-symbol-vector.jpg?s=612x612&w=0&k=20&c=yDJ4ITX1cHMh25Lt1vI1zBn2cAKKAlByHBvPJ8gEiIg=")
+  posts      Post[]
+  comments   Comment[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Post {
   id        Int       @id @default(autoincrement())
   title     String
   content   String
-  likecount Int
+  likecount Int?
   published Boolean   @default(false)
   author    User      @relation(fields: [authorId], references: [id])
   authorId  Int

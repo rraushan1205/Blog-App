@@ -14,13 +14,22 @@ export default function Auth() {
             className="flex flex-col gap-y-2"
           >
             <label htmlFor="email">Email</label>
-            <input name="email" className="text-black px-2 outline-none" />
+            <input
+              name="email"
+              id="email"
+              className="text-black px-2 outline-none"
+            />
             <label htmlFor="password">Password</label>
-            <input name="password" className="text-black px-2 outline-none" />
+            <input
+              name="password"
+              id="password"
+              className="text-black px-2 outline-none"
+            />
 
             <div className="flex justify-center py-2">
               <button
                 type="submit"
+                id="log"
                 className="px-5 py-1 bg-slate-600 w-fit rounded-md"
               >
                 Submit
