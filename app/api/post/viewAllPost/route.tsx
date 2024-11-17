@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
         select: {
           name: true, // Include name of the user
           email: true, // Include email of the user
-          profileImg: true,
         },
       },
     },

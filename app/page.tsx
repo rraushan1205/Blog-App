@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Skeleton from "./routePageSkeleton/skeleton";
+import Nopost from "./ZeroPost/nopost";
 export default function HomePage() {
   // State to store the fetched feed data
   const [feedData, setFeedData] = useState<any[]>([]);
@@ -38,7 +39,7 @@ export default function HomePage() {
     const days = Math.floor(hours / 24);
 
     if (days > 0) {
-      return `${days} day${days > 1 ? "s" : ""} ago`;
+      return `${days} day${days > 10 ? "s" : ""} ago`;
     } else if (hours > 0) {
       return `${hours} hour${hours > 1 ? "s" : ""} ago`;
     } else if (minutes > 0) {
@@ -47,7 +48,7 @@ export default function HomePage() {
       return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
     }
 
-    return "Just now"; // For cases where the difference is less than 1 second
+    return "Just now";
   }
   console.log(feedData[0]);
   if (loading) {
@@ -55,13 +56,15 @@ export default function HomePage() {
       <>
         <Skeleton />
       </>
-    ); // Display loading message while fetching data
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Display error message if fetch fails
+    return <div>Error: {error}</div>;
   }
-
+  if (feedData.length === 0) {
+    return <Nopost />;
+  }
   return (
     <>
       <div className="grid place-content-center text-center">
