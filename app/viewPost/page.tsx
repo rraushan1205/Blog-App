@@ -1,17 +1,37 @@
 "use client";
 import { useEffect, useState } from "react";
 import Skeleton from "../routePageSkeleton/skeleton";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { getCookie } from "cookies-next/client";
+interface CustomJwtPayload extends JwtPayload {
+  id?: string;
+  email?: string;
+  name?: string; // Add any other fields you expect in the JWT
+}
 export default function viewPost() {
+  const [jwtDecoded, setJwtDecoded] = useState<CustomJwtPayload | null>(null);
+  const token = getCookie("auth_token");
   // State to store the Post feed data
   const [postData, setPostData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true); // State to track loading status
   const [error, setError] = useState<string | null>(null); // State for error handling
+  // const [id, setId] = useState("");
 
+  useEffect(() => {
+    if (typeof token === "string") {
+      const decoded = jwtDecode<CustomJwtPayload>(token);
+      setJwtDecoded(decoded);
+      console.log(decoded);
+    } else {
+      console.log("Token is undefined or not a string");
+    }
+    console.log(jwtDecoded);
+  }, [token]);
   useEffect(() => {
     const fetchFeedData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/post/viewPostbyId/11"
+          `http://localhost:3000/api/post/viewPostbyId/${jwtDecoded?.id}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
@@ -24,9 +44,11 @@ export default function viewPost() {
         setLoading(false);
       }
     };
+    if (jwtDecoded?.id) {
+      fetchFeedData();
+    }
+  }, [jwtDecoded]);
 
-    fetchFeedData();
-  }, []);
   function timeAgo(timestamp: string): string {
     const createdAt = new Date(timestamp);
     const now = Date.now();
@@ -86,7 +108,7 @@ export default function viewPost() {
                             />
                           </svg>
                         </div>
-                        <div className="name">Raushan Raj</div>
+                        <div className="name">{jwtDecoded?.name}</div>
                       </div>
                       <div className="time">{timeAgo(post.createdAt)}</div>
                     </div>

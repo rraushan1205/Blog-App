@@ -12,7 +12,7 @@ export async function GET(
       // Get posts by user (authorId)
       const postsByUser = await prisma.post.findMany({
         where: {
-          authorId: Number(id), // Filtering posts by authorId
+          authorId: id, // Filtering posts by authorId
         },
       });
 

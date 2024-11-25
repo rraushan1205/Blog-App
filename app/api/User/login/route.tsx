@@ -34,13 +34,11 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60, // 1 hour in seconds
         path: "/", // Makes the cookie available on all routes
       });
-      console.log(cookie);
-      // Redirect to the homepage after successful login
       return NextResponse.redirect("http://localhost:3000/", {
         headers: { "Set-Cookie": cookie },
       });
     }
   }
 
-  return NextResponse.redirect("http://localhost:3000/login"); // Redirect to login if user does not exist
+  return NextResponse.redirect("http://localhost:3000/"); // Redirect to login if user does not exist
 }

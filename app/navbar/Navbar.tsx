@@ -35,7 +35,7 @@ const Navbar = () => {
       console.log("Token is undefined or not a string");
     }
   }, [token]);
-  console.log(jwtDecoded?.name);
+  // console.log(jwtDecoded?.name);
   return (
     <>
       <nav className="flex justify-between">

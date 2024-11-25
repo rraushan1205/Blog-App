@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Skeleton from "./routePageSkeleton/skeleton";
 import Nopost from "./ZeroPost/nopost";
+
 export default function HomePage() {
   // State to store the fetched feed data
   const [feedData, setFeedData] = useState<any[]>([]);
