@@ -21,7 +21,7 @@ export default function viewPost() {
     if (typeof token === "string") {
       const decoded = jwtDecode<CustomJwtPayload>(token);
       setJwtDecoded(decoded);
-      console.log(decoded);
+      // console.log(decoded);
     } else {
       console.log("Token is undefined or not a string");
     }
@@ -119,7 +119,7 @@ export default function viewPost() {
                       <span className="py-5 px-2">{post.content}</span>
                     </div>
                     <div className="footer flex justify-between px-5 pt-5 pb-8">
-                      <span className="like">
+                      <span className="like flex">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -134,6 +134,7 @@ export default function viewPost() {
                             d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                           />
                         </svg>
+                        <p>{post.likedBy.length}</p>
                       </span>
                       <span className="comments">
                         <svg

@@ -2,13 +2,43 @@
 import { useEffect, useState } from "react";
 import Skeleton from "./routePageSkeleton/skeleton";
 import Nopost from "./ZeroPost/nopost";
-
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { getCookie } from "cookies-next/client";
+interface CustomJwtPayload extends JwtPayload {
+  id?: string;
+  email?: string;
+  name?: string; // Add any other fields you expect in the JWT
+}
 export default function HomePage() {
   // State to store the fetched feed data
+  const [jwtDecoded, setJwtDecoded] = useState<CustomJwtPayload | null>(null);
+  const token = getCookie("auth_token");
   const [feedData, setFeedData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true); // State to track loading status
   const [error, setError] = useState<string | null>(null); // State for error handling
-
+  const HandleClick = async (postid: string, userid: string) => {
+    console.log(userid);
+    const response = await fetch(
+      `http://localhost:3000/api/post/likeByPostId`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postid: postid, userid: userid }),
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+  };
+  useEffect(() => {
+    if (typeof token === "string") {
+      const decoded = jwtDecode<CustomJwtPayload>(token);
+      setJwtDecoded(decoded);
+    } else {
+      console.log("Token is undefined or not a string");
+    }
+  }, [token]);
   useEffect(() => {
     const fetchFeedData = async () => {
       try {
@@ -21,14 +51,14 @@ export default function HomePage() {
         const data = await response.json();
         setFeedData(data);
         setLoading(false);
-        console.log(data);
+        // console.log(data);
       } catch (err) {
         setLoading(false);
       }
     };
-
     fetchFeedData();
   }, []);
+
   function timeAgo(timestamp: string): string {
     const createdAt = new Date(timestamp);
     const now = Date.now();
@@ -51,13 +81,8 @@ export default function HomePage() {
 
     return "Just now";
   }
-  console.log(feedData[0]);
   if (loading) {
-    return (
-      <>
-        <Skeleton />
-      </>
-    );
+    return <Skeleton />;
   }
 
   if (error) {
@@ -104,6 +129,7 @@ export default function HomePage() {
                           )}
                         </div>
                         <div className="name">{post.author.name}</div>
+                        {}
                       </div>
                       <div className="time">{timeAgo(post.createdAt)}</div>
                     </div>
@@ -114,7 +140,14 @@ export default function HomePage() {
                       <span className="py-5 px-2">{post.content}</span>
                     </div>
                     <div className="footer flex justify-between px-5 pt-5 pb-8">
-                      <span className="like">
+                      <span
+                        className="like flex"
+                        onClick={() => {
+                          if (jwtDecoded && typeof jwtDecoded.id === "string") {
+                            HandleClick(post.id, jwtDecoded.id);
+                          }
+                        }}
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -129,6 +162,7 @@ export default function HomePage() {
                             d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
                           />
                         </svg>
+                        <p>{post.likedBy.length}</p>
                       </span>
                       <span className="comments">
                         <svg

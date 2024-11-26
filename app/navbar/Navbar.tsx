@@ -30,7 +30,7 @@ const Navbar = () => {
     if (typeof token === "string") {
       const decoded = jwtDecode<CustomJwtPayload>(token);
       setJwtDecoded(decoded);
-      console.log(decoded);
+      // console.log(decoded);
     } else {
       console.log("Token is undefined or not a string");
     }

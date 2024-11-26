@@ -10,21 +10,14 @@ export async function GET(
   try {
     if (id) {
       // Get posts by user (authorId)
-      const postsByUser = await prisma.post.findMany({
+      const postsById = await prisma.post.findFirst({
         where: {
-          authorId: id, // Filtering posts by authorId
-        },
-        include: {
-          likedBy: {
-            select: {
-              id: true,
-            },
-          },
+          id,
         },
       });
 
       return NextResponse.json({
-        data: postsByUser,
+        data: postsById,
         message: "Posts by user fetched successfully",
       });
     }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { cookies } from "next/headers";
+import { string } from "zod";
 
 const prisma = new PrismaClient();
 interface CustomJwtPayload extends JwtPayload {
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     const User = await prisma.user.findFirst({
       where: {
-        id: userId,
+        id: String(userId),
       },
     });
 

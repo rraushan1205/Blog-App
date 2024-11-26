@@ -7,8 +7,14 @@ export async function GET(request: NextRequest) {
     include: {
       author: {
         select: {
+          id: true,
           name: true, // Include name of the user
           email: true, // Include email of the user
+        },
+      },
+      likedBy: {
+        select: {
+          id: true,
         },
       },
     },
