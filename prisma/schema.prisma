@@ -14,29 +14,42 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
+  id         String     @id @default(cuid())
   name       String
-  email      String    @unique
+  email      String     @unique
   password   String
   posts      Post[]
   comments   Comment[]
-  likedPosts Post[]    @relation("userLikes")
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  likedPosts Post[]     @relation("userLikes")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  PostLike   PostLike[]
 }
 
 model Post {
-  id        String    @id @default(cuid())
+  id        String     @id @default(cuid())
   title     String
   content   String
-  likecount Int       @default(0)
-  published Boolean   @default(false)
-  author    User      @relation(fields: [authorId], references: [id])
+  likecount Int        @default(0)
+  published Boolean    @default(false)
+  author    User       @relation(fields: [authorId], references: [id])
   authorId  String
   comments  Comment[]
-  likedBy   User[]    @relation("userLikes")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  likedBy   User[]     @relation("userLikes")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  PostLike  PostLike[]
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  userId    String
+  postId    String
+  user      User     @relation(fields: [userId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId]) // Ensure a user can only like a post once
 }
 
 model Comment {
