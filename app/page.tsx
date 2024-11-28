@@ -7,15 +7,16 @@ import { getCookie } from "cookies-next/client";
 interface CustomJwtPayload extends JwtPayload {
   id?: string;
   email?: string;
-  name?: string; // Add any other fields you expect in the JWT
+  name?: string;
 }
 export default function HomePage() {
-  // State to store the fetched feed data
   const [jwtDecoded, setJwtDecoded] = useState<CustomJwtPayload | null>(null);
   const token = getCookie("auth_token");
   const [feedData, setFeedData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true); // State to track loading status
-  const [error, setError] = useState<string | null>(null); // State for error handling
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [refreshcnt, setRefreshcnt] = useState(0);
+
   const HandleClick = async (postid: string, userid: string) => {
     console.log(userid);
     const response = await fetch(
@@ -30,6 +31,7 @@ export default function HomePage() {
     );
     const data = await response.json();
     console.log(data);
+    setRefreshcnt(refreshcnt + 1);
   };
   useEffect(() => {
     if (typeof token === "string") {
@@ -57,7 +59,7 @@ export default function HomePage() {
       }
     };
     fetchFeedData();
-  }, []);
+  }, [refreshcnt]);
 
   function timeAgo(timestamp: string): string {
     const createdAt = new Date(timestamp);
