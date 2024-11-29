@@ -8,12 +8,12 @@ export async function POST(request: NextRequest) {
       userId_postId: { userId, postId }, // Composite unique constraint
     },
   });
-
   if (existingLike) {
     return NextResponse.json({
       message: "Already There",
     });
   }
+
   await prisma.postLike.create({
     data: {
       userId,

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Skeleton from "./routePageSkeleton/skeleton";
 import Nopost from "./ZeroPost/nopost";
 import { jwtDecode, JwtPayload } from "jwt-decode";
@@ -16,7 +16,21 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshcnt, setRefreshcnt] = useState(0);
-
+  const cmntbox = useRef<HTMLInputElement | null>(null);
+  const [inputcmnt, setInputcmnt] = useState("");
+  const HandlecmntBox = (postId: String) => {
+    console.log("cmnt clicked for", postId, jwtDecoded?.id);
+    console.log(cmntbox.current);
+    if (cmntbox.current) {
+      cmntbox.current.classList.toggle("bg-slate-500");
+    }
+    console.log(cmntbox.current);
+  };
+  const HandleEnter = (event: KeyboardEvent) => {
+    if (event.key == "Enter") {
+      console.log(inputcmnt);
+    }
+  };
   const HandleClick = async (postid: string, userid: string) => {
     console.log(userid);
     const response = await fetch(
@@ -166,7 +180,12 @@ export default function HomePage() {
                         </svg>
                         <p>{post.likecount}</p>
                       </span>
-                      <span className="comments">
+                      <span
+                        onClick={() => {
+                          HandlecmntBox(post.id);
+                        }}
+                        className="comments"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           fill="none"
@@ -182,6 +201,30 @@ export default function HomePage() {
                           />
                         </svg>
                       </span>
+                    </div>
+                    <div className="flex items-start flex-col">
+                      <h1 className="text-[20px] px-2">Comments</h1>
+                      <hr className="bg-slate-600 w-full" />
+
+                      <div className="cmtsection text-black px-2 bg-slate-700 w-full flex flex-col items-start">
+                        <div className="user font-bold">Raushan</div>
+                        <div className="cmntText mx-5">Nicee...</div>
+                      </div>
+                      <div className="cmtsection text-black px-2 bg-slate-700 w-full flex flex-col items-start">
+                        <div className="user font-bold">Raushan</div>
+                        <div className="cmntText mx-5">Nicee...</div>
+                      </div>
+                      <div className="cmntinput w-full">
+                        <input
+                          type="text"
+                          ref={cmntbox}
+                          value={inputcmnt}
+                          onChange={(e) => setInputcmnt(e.target.value)}
+                          onKeyDown={HandleEnter}
+                          className="bg-slate-700 placeholder:text-gray-500 py-2 px-2 w-full outline-none text-black"
+                          placeholder="add comment"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

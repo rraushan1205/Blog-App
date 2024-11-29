@@ -25,7 +25,7 @@ export default function viewPost() {
     } else {
       console.log("Token is undefined or not a string");
     }
-    console.log(jwtDecoded);
+    // console.log(jwtDecoded);
   }, [token]);
   useEffect(() => {
     const fetchFeedData = async () => {
@@ -39,7 +39,7 @@ export default function viewPost() {
         const data = await response.json();
         setPostData(data.data);
         setLoading(false);
-        console.log(data);
+        // console.log(data);
       } catch (err) {
         setLoading(false);
       }
