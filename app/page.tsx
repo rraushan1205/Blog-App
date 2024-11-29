@@ -4,6 +4,7 @@ import Skeleton from "./routePageSkeleton/skeleton";
 import Nopost from "./ZeroPost/nopost";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { getCookie } from "cookies-next/client";
+
 interface CustomJwtPayload extends JwtPayload {
   id?: string;
   email?: string;
@@ -18,6 +19,7 @@ export default function HomePage() {
   const [refreshcnt, setRefreshcnt] = useState(0);
   const cmntbox = useRef<HTMLInputElement | null>(null);
   const [inputcmnt, setInputcmnt] = useState("");
+
   const HandlecmntBox = (postId: String) => {
     console.log("cmnt clicked for", postId, jwtDecoded?.id);
     console.log(cmntbox.current);
@@ -26,9 +28,24 @@ export default function HomePage() {
     }
     console.log(cmntbox.current);
   };
-  const HandleEnter = (event: KeyboardEvent) => {
+  const HandleEnter = async (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    postId: String
+  ) => {
     if (event.key == "Enter") {
       console.log(inputcmnt);
+      setInputcmnt("");
+      const response = await fetch(`http://localhost:3000/api/User/comment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: inputcmnt,
+          postId,
+          userId: jwtDecoded?.id,
+        }),
+      });
     }
   };
   const HandleClick = async (postid: string, userid: string) => {
@@ -205,22 +222,38 @@ export default function HomePage() {
                     <div className="flex items-start flex-col">
                       <h1 className="text-[20px] px-2">Comments</h1>
                       <hr className="bg-slate-600 w-full" />
-
-                      <div className="cmtsection text-black px-2 bg-slate-700 w-full flex flex-col items-start">
-                        <div className="user font-bold">Raushan</div>
-                        <div className="cmntText mx-5">Nicee...</div>
-                      </div>
-                      <div className="cmtsection text-black px-2 bg-slate-700 w-full flex flex-col items-start">
-                        <div className="user font-bold">Raushan</div>
-                        <div className="cmntText mx-5">Nicee...</div>
-                      </div>
+                      {post.comments &&
+                        post.comments.map(
+                          (
+                            com: {
+                              id: string;
+                              content: string;
+                              author: { name: string };
+                            },
+                            c: number
+                          ) => {
+                            return (
+                              <div
+                                key={c}
+                                className="cmtsection text-black px-2 bg-slate-700 w-full flex flex-row items-start"
+                              >
+                                <div className="user font-bold">
+                                  {com.author.name}
+                                </div>
+                                <div className="cmntText mx-5">
+                                  {com.content}
+                                </div>
+                              </div>
+                            );
+                          }
+                        )}
                       <div className="cmntinput w-full">
                         <input
                           type="text"
                           ref={cmntbox}
                           value={inputcmnt}
                           onChange={(e) => setInputcmnt(e.target.value)}
-                          onKeyDown={HandleEnter}
+                          onKeyDown={(e) => HandleEnter(e, post.id)}
                           className="bg-slate-700 placeholder:text-gray-500 py-2 px-2 w-full outline-none text-black"
                           placeholder="add comment"
                         />
