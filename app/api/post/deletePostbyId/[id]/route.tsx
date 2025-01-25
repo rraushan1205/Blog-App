@@ -8,7 +8,7 @@ export async function GET(
   const { id } = await params;
   try {
     const Post = await prisma.post.delete({
-      where: { id: Number(id) },
+      where: { id: id },
     });
     return NextResponse.json({ id: id, post: Post });
   } catch (error) {
