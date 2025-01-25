@@ -1,12 +1,15 @@
 // app/api/posts/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
-  const { id } = params;
+  const { id } = context.params;
+  
   const getsPosts = await prisma.comment.findMany({
     where: {
       postId: id,
@@ -19,6 +22,6 @@ export async function GET(
       },
     },
   });
-
+  
   return NextResponse.json({ data: getsPosts });
 }
