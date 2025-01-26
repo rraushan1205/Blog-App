@@ -35,7 +35,7 @@ export default function HomePage() {
     if (event.key == "Enter") {
       console.log(inputcmnt);
       setInputcmnt("");
-      const response = await fetch(`http://localhost:3000/api/User/comment`, {
+      const response = await fetch(`/api/User/comment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,16 +50,13 @@ export default function HomePage() {
   };
   const HandleClick = async (postid: string, userid: string) => {
     console.log(userid);
-    const response = await fetch(
-      `http://localhost:3000/api/post/likeByPostId`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ postId: postid, userId: userid }),
-      }
-    );
+    const response = await fetch(`/api/post/likeByPostId`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ postId: postid, userId: userid }),
+    });
     const data = await response.json();
     console.log(data);
     setRefreshcnt(refreshcnt + 1);
@@ -75,9 +72,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchFeedData = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:3000/api/post/viewAllPost"
-        );
+        const response = await fetch("/api/post/viewAllPost");
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
