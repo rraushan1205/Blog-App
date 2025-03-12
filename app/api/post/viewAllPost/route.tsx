@@ -1,14 +1,8 @@
 // app/api/posts/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { client } from "@/lib/dib";
 const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
-  const getRedisData = await client.get("block");
-  if (getRedisData) {
-    return NextResponse.json(JSON.parse(getRedisData));
-  }
-
   const allPosts = await prisma.post.findMany({
     include: {
       author: {
@@ -35,6 +29,5 @@ export async function GET(request: NextRequest) {
       },
     },
   });
-  await client.setEx("block", 50, JSON.stringify(allPosts));
   return NextResponse.json(allPosts);
 }
