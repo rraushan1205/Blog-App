@@ -40,5 +40,5 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  return NextResponse.redirect("http://localhost:3000/"); // Redirect to login if user does not exist
+  return NextResponse.redirect(""); // Redirect to login if user does not exist
 }
