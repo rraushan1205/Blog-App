@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60, // 1 hour in seconds
         path: "/", // Makes the cookie available on all routes
       });
-      return NextResponse.redirect("/", {
+      return NextResponse.redirect("https://blog-app-oidj.vercel.app/", {
         headers: { "Set-Cookie": cookie },
       });
     }
   }
 
-  return NextResponse.redirect(""); // Redirect to login if user does not exist
+  return NextResponse.redirect("https://blog-app-oidj.vercel.app/"); // Redirect to login if user does not exist
 }
