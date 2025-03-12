@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         maxAge: 60 * 60, // 1 hour in seconds
         path: "/", // Makes the cookie available on all routes
       });
-      return NextResponse.redirect("http://localhost:3000/", {
+      return NextResponse.redirect("/", {
         headers: { "Set-Cookie": cookie },
       });
     }
